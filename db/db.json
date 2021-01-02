@@ -1,0 +1,29 @@
+{
+    "keyValuePairs": [
+        {
+            "id": 1,
+            "lastName": "Tom",
+            "firstName": "Big"
+        },
+        {
+            "id": 2,
+            "lastName": "Jimmy",
+            "firstName": "Little"
+        },
+        {
+            "id": 3,
+            "lastName": "John",
+            "firstName": "Mid"
+        },
+        {
+            "id": 4,
+            "lastName": "Benkó",
+            "firstName": "Kuku"
+        },
+        {
+            "id": 5,
+            "lastName": "Monyók",
+            "firstName": "Kaponyányi"
+        }
+    ]
+}

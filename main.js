@@ -8,6 +8,8 @@
 
 'use strict';
 
+const targetDiv = document.querySelector('#container');
+
 let fetchInit = {
     method: "GET",
     headers: new Headers,
@@ -19,22 +21,73 @@ const fromArrayToDiv = function (div, arr) {
     div.innerHTML = `<div>\n${arr.map((item, idx) => `<p>${item.firstName} ${item.lastName}</p>\n`).join('')}</div>`;
 }
 
-const fillInDiv = function (div) {
-    fetch("http://localhost:3000/keyValuePairs", fetchInit).then(
-        data => data.json(),
-        err => console.error(err)
-    ).then(users => {
-        const storageItem = JSON.stringify(users);
-        localStorage.setItem('users', storageItem);
-        fromArrayToDiv(div, users);
-    }).catch(err => {
-        console.error(err);
-    });
-};
-
-const fillInDiv2 = function (div) {
-    let html = localStorage.getItem('users');
-    if (html) {
-        fromArrayToDiv(div, JSON.parse(html));
-    } else fillInDiv(div);
+const readFromStorage = () => {
+    try {
+        let html = localStorage.getItem('users');
+        if (html) {
+            fromArrayToDiv(targetDiv, JSON.parse(html));
+        }
+    }
+    catch (err) {
+        console.log('a localStorage is üres vagy parsolási hiba történt');
+        // console.error(err);
+    }
 }
+
+const fillInDiv = function (div) {
+    try {
+        const result = fetch("http://localhost:3000/keyValuePairsa", fetchInit);
+        result.then(data => data.json(),
+            err => {
+                console.log('fetch .then err ág');
+                readFromStorage()
+            }
+        )
+            .then(users => {
+                const storageItem = JSON.stringify(users);
+                localStorage.setItem('users', storageItem);
+                fromArrayToDiv(targetDiv, users);
+            })
+            .catch((err) => {
+                // console.log('fetch .catch ág');
+                console.log('Az alkalmazás offline vagy hibás a host elérési útvonala');
+                readFromStorage();
+            })
+
+    } catch (err) {
+        console.log('try catch ág');
+        console.error(err);
+        // readFromStorage();
+    }
+
+}
+
+const start = (targetDiv) => {
+    try {
+        fillInDiv(targetDiv);
+    }
+    catch (err) {
+        console.log('try catch error ág');
+        console.error(err);
+    }
+}
+
+// const fillInDiv = function (div) {
+//     fetch("http://localhost:3000/keyValuePairs", fetchInit).then(
+//         data => data.json(),
+//         err => console.error(err)
+//     ).then(users => {
+//         const storageItem = JSON.stringify(users);
+//         localStorage.setItem('users', storageItem);
+//         fromArrayToDiv(div, users);
+//     }).catch(err => {
+//         console.error(err);
+//     });
+// };
+
+// const fillInDiv2 = function (div) {
+//     let html = localStorage.getItem('users');
+//     if (html) {
+//         fromArrayToDiv(div, JSON.parse(html));
+//     } else fillInDiv(div);
+// }
